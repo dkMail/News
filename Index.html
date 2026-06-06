@@ -1,1 +1,398 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cyber News Post-Card Generator</title>
 
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Bengali Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <!-- html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Noto Sans Bengali', sans-serif;
+      background: #0b0f0d;
+    }
+
+    .card-shadow {
+      box-shadow:
+        0 0 20px rgba(0, 255, 140, 0.08),
+        0 0 60px rgba(0, 0, 0, 0.7);
+    }
+
+    .news-card {
+      width: 1080px;
+      height: 1080px;
+      position: relative;
+      overflow: hidden;
+      background: #101514;
+    }
+
+    .image-overlay {
+      background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.95) 0%,
+        rgba(0,0,0,0.75) 30%,
+        rgba(0,0,0,0.2) 60%,
+        rgba(0,0,0,0) 100%
+      );
+    }
+
+    .glass {
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    @media(max-width: 1200px){
+      .preview-wrapper {
+        transform: scale(0.35);
+        transform-origin: top center;
+        height: 420px !important;
+      }
+    }
+
+    @media(max-width: 768px){
+      .preview-wrapper {
+        transform: scale(0.28);
+        height: 330px !important;
+      }
+    }
+  </style>
+</head>
+<body class="text-white min-h-screen">
+
+  <div class="max-w-7xl mx-auto p-5 lg:p-8">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl lg:text-4xl font-extrabold text-green-400">
+        Cyber News Post-Card Generator
+      </h1>
+      <p class="text-gray-400 mt-2">
+        Create professional 1080x1080 cyber-style news cards instantly.
+      </p>
+    </div>
+
+    <!-- Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+      <!-- LEFT: Controls -->
+      <div class="glass rounded-2xl p-6 card-shadow">
+
+        <h2 class="text-2xl font-bold mb-6 text-green-400">
+          Input Controls
+        </h2>
+
+        <!-- Image Upload -->
+        <div class="mb-5">
+          <label class="block mb-2 font-semibold">
+            Main News Image
+          </label>
+
+          <input
+            type="file"
+            id="imageUpload"
+            accept="image/*"
+            class="w-full bg-black/40 border border-gray-700 rounded-lg p-3 text-sm"
+          />
+        </div>
+
+        <!-- Headline -->
+        <div class="mb-5">
+          <label class="block mb-2 font-semibold">
+            হেডলাইন
+          </label>
+
+          <textarea
+            id="headlineInput"
+            maxlength="100"
+            rows="3"
+            placeholder="এখানে হেডলাইন লিখুন..."
+            class="w-full bg-black/40 border border-gray-700 rounded-lg p-4 focus:outline-none focus:border-green-500"
+          ></textarea>
+
+          <div class="text-right text-sm text-gray-400 mt-1">
+            <span id="headlineCount">0</span>/100
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div class="mb-5">
+          <label class="block mb-2 font-semibold">
+            বিস্তারিত
+          </label>
+
+          <textarea
+            id="detailsInput"
+            rows="5"
+            placeholder="এখানে বিস্তারিত লিখুন..."
+            class="w-full bg-black/40 border border-gray-700 rounded-lg p-4 focus:outline-none focus:border-green-500"
+          ></textarea>
+        </div>
+
+        <!-- Reporter -->
+        <div class="mb-5">
+          <label class="block mb-2 font-semibold">
+            নাম / সোর্স
+          </label>
+
+          <input
+            type="text"
+            id="reporterInput"
+            placeholder="MCSF NEWS"
+            class="w-full bg-black/40 border border-gray-700 rounded-lg p-4 focus:outline-none focus:border-green-500"
+          />
+        </div>
+
+        <!-- Date -->
+        <div class="mb-5">
+          <label class="block mb-2 font-semibold">
+            তারিখ
+          </label>
+
+          <input
+            type="text"
+            id="dateInput"
+            placeholder="০৬ জুন ২০২৬ | ১০:৩০ PM"
+            class="w-full bg-black/40 border border-gray-700 rounded-lg p-4 focus:outline-none focus:border-green-500"
+          />
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Preview -->
+      <div>
+
+        <div class="glass rounded-2xl p-5 card-shadow">
+
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-2xl font-bold text-green-400">
+              Live Preview
+            </h2>
+
+            <span class="text-sm text-gray-400">
+              1080 × 1080
+            </span>
+          </div>
+
+          <!-- Scaled Preview -->
+          <div class="preview-wrapper flex justify-center overflow-auto h-[500px]">
+
+            <!-- CARD -->
+            <div id="newsCard" class="news-card rounded-[30px]">
+
+              <!-- Background Image -->
+              <img
+                id="previewImage"
+                src="https://images.unsplash.com/photo-1510511459019-5dda7724fd87?q=80&w=1200&auto=format&fit=crop"
+                class="absolute inset-0 w-full h-full object-cover"
+              />
+
+              <!-- Dark Overlay -->
+              <div class="absolute inset-0 image-overlay"></div>
+
+              <!-- Top Bar -->
+              <div class="absolute top-0 left-0 w-full p-10 flex justify-between items-start">
+
+                <!-- Tag -->
+                <div class="bg-green-500/20 border border-green-500/40 px-6 py-3 rounded-full">
+                  <span class="text-green-300 font-bold tracking-wider text-[28px]">
+                    CYBER NEWS
+                  </span>
+                </div>
+
+                <!-- Logo -->
+                <div class="w-32 h-32 bg-black/50 rounded-2xl p-3 border border-white/10">
+                  <img
+                    src="logo.png"
+                    alt="Logo"
+                    class="w-full h-full object-contain"
+                  />
+                </div>
+
+              </div>
+
+              <!-- Bottom Content -->
+              <div class="absolute bottom-0 left-0 w-full p-12">
+
+                <!-- Accent Line -->
+                <div class="w-40 h-2 bg-green-400 rounded-full mb-8"></div>
+
+                <!-- Headline -->
+                <h1
+                  id="previewHeadline"
+                  class="text-white font-extrabold leading-tight text-[62px] mb-6"
+                >
+                  এখানে আপনার নিউজ হেডলাইন দেখা যাবে
+                </h1>
+
+                <!-- Details -->
+                <p
+                  id="previewDetails"
+                  class="text-gray-300 leading-relaxed text-[32px] mb-10"
+                >
+                  বিস্তারিত তথ্য এখানে দেখা যাবে...
+                </p>
+
+                <!-- Footer -->
+                <div class="flex items-center justify-between border-t border-white/10 pt-6">
+
+                  <div>
+                    <p class="text-gray-400 text-[24px] uppercase tracking-wider">
+                      REPORTER
+                    </p>
+
+                    <p
+                      id="previewReporter"
+                      class="text-white text-[30px] font-semibold mt-1"
+                    >
+                      MCSF NEWS
+                    </p>
+                  </div>
+
+                  <div class="text-right">
+                    <p class="text-gray-400 text-[24px] uppercase tracking-wider">
+                      DATE
+                    </p>
+
+                    <p
+                      id="previewDate"
+                      class="text-green-300 text-[28px] font-semibold mt-1"
+                    >
+                      ০৬ জুন ২০২৬
+                    </p>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Download Button -->
+          <button
+            id="downloadBtn"
+            class="w-full mt-6 bg-green-500 hover:bg-green-400 transition-all duration-300 text-black font-bold py-4 rounded-xl text-lg"
+          >
+            Download Card
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // Inputs
+    const imageUpload = document.getElementById('imageUpload');
+    const headlineInput = document.getElementById('headlineInput');
+    const detailsInput = document.getElementById('detailsInput');
+    const reporterInput = document.getElementById('reporterInput');
+    const dateInput = document.getElementById('dateInput');
+
+    // Preview Elements
+    const previewImage = document.getElementById('previewImage');
+    const previewHeadline = document.getElementById('previewHeadline');
+    const previewDetails = document.getElementById('previewDetails');
+    const previewReporter = document.getElementById('previewReporter');
+    const previewDate = document.getElementById('previewDate');
+
+    // Character Counter
+    const headlineCount = document.getElementById('headlineCount');
+
+    // Image Upload Preview
+    imageUpload.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+          previewImage.src = event.target.result;
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Live Headline Update
+    headlineInput.addEventListener('input', function() {
+      previewHeadline.textContent =
+        this.value || 'এখানে আপনার নিউজ হেডলাইন দেখা যাবে';
+
+      headlineCount.textContent = this.value.length;
+    });
+
+    // Live Details Update
+    detailsInput.addEventListener('input', function() {
+      previewDetails.textContent =
+        this.value || 'বিস্তারিত তথ্য এখানে দেখা যাবে...';
+    });
+
+    // Live Reporter Update
+    reporterInput.addEventListener('input', function() {
+      previewReporter.textContent =
+        this.value || 'MCSF NEWS';
+    });
+
+    // Live Date Update
+    dateInput.addEventListener('input', function() {
+      previewDate.textContent =
+        this.value || '০৬ জুন ২০২৬';
+    });
+
+    // Download Card
+    document.getElementById('downloadBtn').addEventListener('click', async () => {
+
+      const card = document.getElementById('newsCard');
+
+      const canvas = await html2canvas(card, {
+        useCORS: true,
+        scale: 2,
+        backgroundColor: null
+      });
+
+      const image = canvas.toDataURL('image/png');
+
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = 'cyber-news-card.png';
+
+      link.click();
+    });
+
+    // Default Date
+    const now = new Date();
+
+    const formattedDate = now.toLocaleString('bn-BD', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    dateInput.value = formattedDate;
+    previewDate.textContent = formattedDate;
+  </script>
+
+</body>
+              </html>
