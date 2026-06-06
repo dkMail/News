@@ -3,71 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCSF Pro News Generator</title>
+    <title>MCSF News card Generator</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Hind Siliguri -->
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- html2canvas Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
-    <!-- QR Code Generator Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 
     <style>
         body {
             font-family: 'Hind Siliguri', sans-serif;
-            background-color: #050505; /* Deep black matching logo background */
+            background-color: #050505;
             color: #e2e8f0;
         }
         
-        /* Custom Cyber Scrollbar */
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #10b981; }
         
-        #card-template {
-            width: 1080px;
-            height: 1080px;
-            position: relative;
-            overflow: hidden;
-            background-color: #020617;
-            user-select: none;
-        }
-        
+        /* Preview Wrapper (Square Box) */
         #preview-wrapper {
             width: 100%;
             max-width: 500px;
             aspect-ratio: 1 / 1;
             position: relative;
             overflow: hidden;
-            border: 1px solid #10b981; /* Cyber green border */
+            border: 1px solid #10b981;
             border-radius: 8px;
             background: #020617;
             box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
         }
 
-        /* Cyber UI Enhancements */
+        /* Card Template (Fixed Size, Absolute Position for mobile scaling fix) */
+        #card-template {
+            width: 1080px;
+            height: 1080px;
+            position: absolute; 
+            top: 0;
+            left: 0;
+            transform-origin: top left;
+            background-color: #020617;
+            user-select: none;
+        }
+
+        /* Inputs */
         .cyber-input {
             background-color: #0a0a0a;
             border: 1px solid #1f2937;
-            color: #10b981; /* Green text typing */
+            color: #10b981;
             transition: all 0.3s ease;
         }
-        .cyber-input::placeholder {
-            color: #4b5563; /* Placeholder jolchap */
-            font-size: 13px;
-        }
-        .cyber-input:focus {
-            border-color: #10b981;
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
-            outline: none;
-        }
+        .cyber-input::placeholder { color: #4b5563; font-size: 13px; }
+        .cyber-input:focus { border-color: #10b981; outline: none; }
 
-        /* Card Elements */
+        /* Effects */
         .cyber-grid {
             background-image: radial-gradient(rgba(16, 185, 129, 0.2) 2px, transparent 2px);
             background-size: 30px 30px;
@@ -88,44 +79,34 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- Header (Matching Logo Colors) -->
-    <header class="bg-[#0a0a0a] border-b border-emerald-900/50 py-4 px-6 shadow-[0_4px_20px_rgba(0,0,0,0.8)] z-10">
+    <header class="bg-[#0a0a0a] border-b border-emerald-900/50 py-4 px-6 shadow-lg z-10">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="bg-black p-2 rounded border border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                <div class="bg-black p-2 rounded border border-emerald-500/50">
                     <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path>
                     </svg>
                 </div>
                 <div>
                     <h1 class="text-xl font-bold tracking-wide text-white">MCSF <span class="text-emerald-500">CYBER</span> DESK</h1>
-                    <p class="text-[10px] text-slate-500 uppercase tracking-widest">Secure News Generator System</p>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest">Secure News Generator</p>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Dashboard -->
     <main class="max-w-7xl mx-auto w-full p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-8 flex-grow">
         
-        <!-- Left Side: Controls Form (Cyber Theme) -->
-        <section class="lg:col-span-5 bg-[#050505] border border-gray-800 rounded-xl p-5 shadow-2xl flex flex-col gap-5 h-[calc(100vh-140px)] lg:min-h-[680px] overflow-y-auto custom-scroll relative">
-            
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-50"></div>
-
-            <!-- Image Upload (Zoom Removed) -->
+        <section class="lg:col-span-5 bg-[#050505] border border-gray-800 rounded-xl p-5 shadow-2xl flex flex-col gap-5 h-auto lg:h-[calc(100vh-140px)] overflow-y-auto custom-scroll relative">
             <div class="space-y-2">
                 <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">১. খবরের ব্যাকগ্রাউন্ড ছবি</label>
-                <div class="relative">
-                    <input type="file" id="image-upload" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded file:border-0 file:bg-[#10b981] file:text-black file:font-bold hover:file:bg-emerald-400 cursor-pointer cyber-input rounded-md">
-                </div>
+                <input type="file" id="image-upload" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded file:border-0 file:bg-[#10b981] file:text-black file:font-bold hover:file:bg-emerald-400 cursor-pointer cyber-input rounded-md">
             </div>
 
-            <!-- Category / Badge -->
             <div class="space-y-2">
                 <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">২. নিউজ ক্যাটাগরি</label>
                 <div class="grid grid-cols-2 gap-3">
-                    <input type="text" id="badge-input" placeholder="যেমন: সাইবার অ্যালার্ট" class="cyber-input w-full rounded px-3 py-2 text-sm">
+                    <input type="text" id="badge-input" placeholder="যেমন: ব্রেকিং নিউজ" class="cyber-input w-full rounded px-3 py-2 text-sm">
                     <select id="badge-color" class="cyber-input w-full rounded px-2 py-2 text-sm">
                         <option value="bg-emerald-600">সবুজ (Cyber)</option>
                         <option value="bg-red-600">লাল (Breaking)</option>
@@ -134,83 +115,60 @@
                 </div>
             </div>
 
-            <!-- Headline -->
             <div class="space-y-2">
                 <div class="flex justify-between items-end">
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">৩. হেডলাইন (শিরোনাম)</label>
-                    <span class="text-[9px] text-emerald-500 bg-emerald-950/30 px-2 py-0.5 rounded border border-emerald-900/50">শব্দের দুইপাশে * দিলে সবুজ হবে</span>
+                    <span class="text-[9px] text-emerald-500 bg-emerald-950/30 px-2 py-0.5 rounded border border-emerald-900/50">*শব্দ* = সবুজ</span>
                 </div>
-                <textarea id="headline-input" rows="3" placeholder="এখানে মূল শিরোনাম লিখুন...&#10;যেমন: মাটূয়াইল *সাইবার সিকিউরিটি ফোর্সের* নতুন উদ্যোগ!" class="cyber-input w-full rounded px-3 py-2 text-sm resize-none"></textarea>
+                <textarea id="headline-input" rows="3" placeholder="যেমন: MCSF *সাইবার ফোর্সের* নতুন উদ্যোগ!" class="cyber-input w-full rounded px-3 py-2 text-sm resize-none"></textarea>
             </div>
 
-            <!-- Details -->
             <div class="space-y-2">
                 <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">৪. বিস্তারিত বিবরণ</label>
-                <textarea id="details-input" rows="4" placeholder="খবরের সংক্ষিপ্ত বিবরণ বা বিস্তারিত তথ্য এখানে লিখুন..." class="cyber-input w-full rounded px-3 py-2 text-sm resize-none"></textarea>
+                <textarea id="details-input" rows="3" placeholder="বিস্তারিত তথ্য এখানে লিখুন..." class="cyber-input w-full rounded px-3 py-2 text-sm resize-none"></textarea>
             </div>
 
-            <!-- Reporter Name -->
             <div class="space-y-2">
                 <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">৫. প্রতিবেদকের নাম / উৎস</label>
-                <input type="text" id="reporter-input" placeholder="যেমন: নিজস্ব প্রতিবেদক বা MCSF ডেস্ক" class="cyber-input w-full rounded px-3 py-2 text-sm">
+                <input type="text" id="reporter-input" placeholder="যেমন: MCSF ডেস্ক" class="cyber-input w-full rounded px-3 py-2 text-sm">
             </div>
-
-            <!-- Note about QR Code -->
+            
             <div class="mt-2 p-3 bg-emerald-950/20 border border-emerald-900/50 rounded-md">
                 <p class="text-[11px] text-emerald-400/80 leading-relaxed">
-                    <span class="font-bold text-emerald-400">✅ QR Code Info:</span> কার্ডের কিউআর কোডটিতে স্বয়ংক্রিয়ভাবে MCSF এর Facebook, Telegram এবং WhatsApp লিংক যুক্ত করা আছে। স্ক্যান করলেই ৩টি লিংক দেখা যাবে।
+                    <span class="font-bold text-emerald-400">✅ QR Code:</span> স্বয়ংক্রিয়ভাবে MCSF এর Facebook, Telegram এবং WhatsApp লিংক যুক্ত করা আছে।
                 </p>
             </div>
         </section>
 
-        <!-- Right Side: Live Preview Area -->
-        <section class="lg:col-span-7 flex flex-col items-center justify-center bg-[#0a0a0a] border border-gray-900 rounded-xl p-6 shadow-2xl relative">
-            
+        <section class="lg:col-span-7 flex flex-col items-center justify-start bg-[#0a0a0a] border border-gray-900 rounded-xl p-4 shadow-2xl relative">
             <div class="w-full flex justify-between items-center mb-4 px-2">
                 <h3 class="text-sm font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_red]"></span> লাইভ প্রিভিউ
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> লাইভ প্রিভিউ
                 </h3>
-                <span class="text-[10px] text-slate-500 border border-slate-800 bg-black px-2 py-1 rounded">1080x1080 HD</span>
+                <span class="text-[10px] text-slate-500 bg-black px-2 py-1 rounded border border-slate-800">1080x1080 HD</span>
             </div>
 
-            <!-- Preview Wrapper -->
             <div id="preview-wrapper">
                 <div id="card-template">
-                    
-                    <!-- Background Image (Auto Fit) -->
                     <div class="absolute inset-0 w-full h-full z-0 bg-black">
-                        <!-- Default placeholder image -->
                         <img id="card-news-img" src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1080&auto=format&fit=crop" class="w-full h-full object-cover">
                     </div>
 
-                    <!-- Cyber Overlay Grid -->
                     <div class="absolute inset-0 w-full h-full z-10 cyber-grid"></div>
                     <div class="absolute top-0 left-0 w-full h-[35%] z-10" style="background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);"></div>
 
-                    <!-- Badge -->
                     <div class="absolute top-10 left-10 z-20">
-                        <div id="card-badge" class="bg-emerald-600 text-white font-bold text-[28px] px-6 py-2.5 rounded uppercase tracking-wide border border-white/20 shadow-lg hidden">
-                            <!-- Hidden until typed -->
-                        </div>
+                        <div id="card-badge" class="bg-emerald-600 text-white font-bold text-[28px] px-6 py-2.5 rounded uppercase tracking-wide border border-white/20 shadow-lg hidden"></div>
                     </div>
 
-                    <!-- Logo Area -->
                     <div class="absolute top-8 right-10 z-20">
                         <img id="card-logo" src="32390.png" onerror="this.src='https://placehold.co/150x150/000000/10b981?text=MCSF'" class="w-[150px] h-[150px] object-contain drop-shadow-[0_5px_15px_rgba(0,0,0,0.9)]">
                     </div>
 
-                    <!-- Bottom Content Glass Panel -->
                     <div class="absolute bottom-0 left-0 w-full glass-panel z-20 px-12 pt-10 pb-10 flex flex-col">
-                        
-                        <!-- Headline -->
                         <h2 id="card-headline" class="text-[52px] font-bold text-white leading-[1.3] mb-5 border-l-[8px] border-emerald-500 pl-6 drop-shadow-xl min-h-[65px]"></h2>
-                        
-                        <!-- Details -->
                         <p id="card-details" class="text-[26px] text-gray-300 font-medium leading-[1.6] mb-8 drop-shadow-lg min-h-[40px]"></p>
-
-                        <!-- Footer -->
                         <div class="border-t border-slate-700 pt-6 flex justify-between items-end">
-                            <!-- Reporter & Date -->
                             <div class="flex flex-col gap-2">
                                 <div class="flex items-center gap-3 text-[22px] font-bold text-emerald-500">
                                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
@@ -218,8 +176,6 @@
                                 </div>
                                 <div id="card-date" class="text-[20px] text-slate-400 font-medium"></div>
                             </div>
-
-                            <!-- Single QR Code with 3 Links -->
                             <div class="flex items-center gap-4">
                                 <div class="text-right flex flex-col items-end justify-center">
                                     <span class="text-[13px] text-emerald-500 font-bold tracking-[0.2em] uppercase mb-1">Scan for Links</span>
@@ -231,14 +187,11 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Bottom Accent Bar -->
                     <div class="absolute bottom-0 left-0 w-full h-[6px] bg-gradient-to-r from-emerald-700 via-emerald-400 to-red-600 z-30"></div>
                 </div>
             </div>
 
-            <!-- Download Button -->
-            <button id="download-btn" class="mt-6 w-full max-w-[500px] bg-emerald-600 hover:bg-emerald-500 text-black font-extrabold uppercase tracking-wider py-4 px-6 rounded transition duration-200 flex items-center justify-center gap-2.5 shadow-[0_0_20px_rgba(16,185,129,0.3)] border border-emerald-400">
+            <button id="download-btn" class="mt-6 w-full bg-emerald-600 hover:bg-emerald-500 text-black font-extrabold uppercase tracking-wider py-4 px-6 rounded transition duration-200 flex items-center justify-center gap-2.5 shadow-[0_0_20px_rgba(16,185,129,0.3)] border border-emerald-400">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 এইচডি কার্ড ডাউনলোড করুন
             </button>
@@ -246,16 +199,24 @@
     </main>
 
     <script>
-        // Scaling Preview smoothly
+        // PERFECT SCALING SCRIPT FOR MOBILE & DESKTOP
         function updatePreviewScale() {
             const wrapper = document.getElementById('preview-wrapper');
-            const scale = wrapper.clientWidth / 1080;
             const template = document.getElementById('card-template');
-            template.style.transform = `scale(${scale})`;
-            template.style.transformOrigin = 'top left';
+            if(wrapper && template) {
+                const wrapperWidth = wrapper.getBoundingClientRect().width;
+                const scale = wrapperWidth / 1080;
+                template.style.transform = `scale(${scale})`;
+            }
         }
+        
+        // Listen to both resize and load to fix mobile cut-off
         window.addEventListener('resize', updatePreviewScale);
+        window.addEventListener('load', updatePreviewScale);
+        
+        // Fallback timeout to ensure wrapper width is calculated
         setTimeout(updatePreviewScale, 100);
+        setTimeout(updatePreviewScale, 500);
 
         // Date System
         function setBengaliDate() {
@@ -266,51 +227,37 @@
         }
         setBengaliDate();
 
-        // DOM Inputs
+        // Text & Highlight Input Listeners
         const headlineInput = document.getElementById('headline-input');
-        const badgeInput = document.getElementById('badge-input');
-        const badgeColor = document.getElementById('badge-color');
-        const detailsInput = document.getElementById('details-input');
-        const reporterInput = document.getElementById('reporter-input');
-        
-        // Smart Highlight Engine
         headlineInput.addEventListener('input', () => {
             const formatted = headlineInput.value.replace(/\*(.*?)\*/g, '<span class="smart-highlight">$1</span>');
             document.getElementById('card-headline').innerHTML = formatted;
         });
 
-        // Hide/Show logic for Empty Fields
-        badgeInput.addEventListener('input', e => {
+        document.getElementById('badge-input').addEventListener('input', e => {
             const badge = document.getElementById('card-badge');
-            if(e.target.value.trim() === '') {
-                badge.style.display = 'none';
-            } else {
-                badge.style.display = 'block';
-                badge.innerText = e.target.value;
-            }
+            if(e.target.value.trim() === '') { badge.style.display = 'none'; } 
+            else { badge.style.display = 'block'; badge.innerText = e.target.value; }
         });
-
-        detailsInput.addEventListener('input', e => document.getElementById('card-details').innerText = e.target.value);
-        reporterInput.addEventListener('input', e => document.getElementById('card-reporter').innerText = e.target.value);
-
-        // Badge Color
-        badgeColor.addEventListener('change', () => {
+        document.getElementById('details-input').addEventListener('input', e => document.getElementById('card-details').innerText = e.target.value);
+        document.getElementById('reporter-input').addEventListener('input', e => document.getElementById('card-reporter').innerText = e.target.value);
+        
+        document.getElementById('badge-color').addEventListener('change', e => {
             const badge = document.getElementById('card-badge');
-            badge.className = "text-white font-bold text-[28px] px-6 py-2.5 rounded uppercase tracking-wide border border-white/20 shadow-lg";
-            badge.classList.add(badgeColor.value);
+            badge.className = `text-white font-bold text-[28px] px-6 py-2.5 rounded uppercase tracking-wide border border-white/20 shadow-lg ${e.target.value}`;
         });
 
-        // Generate 1 QR Code containing all 3 links
-        const combinedLinks = "MCSF Official Links:\n\nFB: https://www.facebook.com/profile.php?id=61576825379963nTG: https://t.me/team_mcsf001nWA: https://whatsapp.com/channel/0029VbDJp5cBvvsXJwqLJG0N";
-        new QRious({
-            element: document.getElementById('qr-canvas'),
-            value: combinedLinks,
-            size: 130, // Larger size to handle more text data
-            background: 'white',
-            foreground: 'black'
+        // 3 Links combined into 1 QR Code
+        const combinedLinks = "MCSF Official Links:\nFB: https://www.facebook.com/profile.php?id=61576825379963\nTG: https://t.me/team_mcsf001\nWA: https://whatsapp.com/channel/0029VbDJp5cBvvsXJwqLJG0N";
+        new QRious({ 
+            element: document.getElementById('qr-canvas'), 
+            value: combinedLinks, 
+            size: 130, 
+            background: 'white', 
+            foreground: 'black' 
         });
 
-        // Image Uploader (Auto fits without zoom)
+        // Background Image Handler
         document.getElementById('image-upload').addEventListener('change', e => {
             const file = e.target.files[0];
             if (file) {
@@ -320,38 +267,36 @@
             }
         });
 
-        // Ager Moto Download Method (onclone)
+        // Download Action
         document.getElementById('download-btn').addEventListener('click', async function() {
             const btn = this;
             const originalText = btn.innerHTML;
-            btn.innerHTML = 'প্রসেসিং হচ্ছে...';
+            btn.innerHTML = 'প্রসেসিং...';
             btn.disabled = true;
-
             await document.fonts.ready;
 
             html2canvas(document.getElementById('card-template'), {
-                useCORS: true,
-                allowTaint: true,
+                useCORS: true, 
+                allowTaint: true, 
                 scale: 1, 
-                width: 1080,
-                height: 1080,
+                width: 1080, 
+                height: 1080, 
                 backgroundColor: "#000000",
-                logging: false,
                 onclone: function(doc) {
-                    // This fixes the size issue natively
-                    doc.getElementById('card-template').style.transform = 'none';
+                    const clonedCard = doc.getElementById('card-template');
+                    clonedCard.style.transform = 'none';
+                    clonedCard.style.position = 'relative'; 
                 }
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `MCSF_HQ_${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
-                
-                btn.innerHTML = originalText;
+                btn.innerHTML = originalText; 
                 btn.disabled = false;
             }).catch(err => {
-                alert("ডাউনলোড করতে সমস্যা হয়েছে। পেজ রিলোড দিয়ে আবার চেষ্টা করুন।");
-                btn.innerHTML = originalText;
+                alert("সমস্যা হয়েছে! আবার চেষ্টা করুন।");
+                btn.innerHTML = originalText; 
                 btn.disabled = false;
             });
         });
