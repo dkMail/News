@@ -271,7 +271,7 @@
         const previewWrapper = document.getElementById('preview-wrapper');
         const downloadBtn = document.getElementById('download-btn');
 
-        // Dynamic Responsive Auto-Scaling logic for 1080x1080 inside smaller layout container
+        // Dynamic Responsive Auto-Scaling
         function updatePreviewScale() {
             const wrapperWidth = previewWrapper.clientWidth;
             const targetSize = 1080;
@@ -281,20 +281,13 @@
             cardTemplate.style.transformOrigin = 'top left';
         }
 
-        // Initialize Responsive Scale triggers
         window.addEventListener('resize', updatePreviewScale);
-        // Execute right away on content load
         setTimeout(updatePreviewScale, 100);
 
-        // Auto Setup System Current Date formatted beautifully in Bengali style
+        // Auto Setup System Current Date
         function setBengaliDate() {
             const date = new Date();
-            const months = [
-                'জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 
-                'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'
-            ];
-            
-            // Number mapping utility to Bengali figures
+            const months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
             const convertToBengaliNum = (num) => {
                 const numStr = num.toString();
                 const conversion = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
@@ -311,60 +304,50 @@
         }
         setBengaliDate();
 
-        // Image Zooming and Panning Matrix Updater function
+        // Image Zooming and Panning Matrix Updater
         function applyImageTransformations() {
             const zoom = zoomSlider.value;
             const x = panXSlider.value;
             const y = panYSlider.value;
             
-            // Apply scale and translation styles to image directly
             cardNewsImg.style.transform = `scale(${zoom}) translate(${x}px, ${y}px)`;
-            
-            // Dynamic Label values indicator update
             document.getElementById('zoom-val').innerText = `${zoom}x`;
             document.getElementById('pan-x-val').innerText = `${x}px`;
             document.getElementById('pan-y-val').innerText = `${y}px`;
         }
 
-        // Attach listeners for image transform controls
         zoomSlider.addEventListener('input', applyImageTransformations);
         panXSlider.addEventListener('input', applyImageTransformations);
         panYSlider.addEventListener('input', applyImageTransformations);
 
-        // Core Event Input updates for text dynamic synchronization
+        // Core Event Input updates
         badgeInput.addEventListener('input', () => cardBadge.innerText = badgeInput.value);
         headlineInput.addEventListener('input', () => cardHeadline.innerText = headlineInput.value);
         detailsInput.addEventListener('input', () => cardDetails.innerText = detailsInput.value);
         reporterInput.addEventListener('input', () => cardReporter.innerText = reporterInput.value);
         dateInput.addEventListener('input', () => cardDate.innerText = dateInput.value);
 
-        // Badge color dropdown changer controller logic
+        // Badge color dropdown changer
         badgeColor.addEventListener('change', () => {
-            // Reset standard background colors entirely first
             cardBadge.className = "text-white font-bold text-2xl px-5 py-2.5 rounded shadow-lg uppercase tracking-wider border border-white/10";
-            // Add custom targeted tailwind classes
             const currentSelectedColorClasses = badgeColor.value.split(' ');
             currentSelectedColorClasses.forEach(cls => cardBadge.classList.add(cls));
         });
 
-        // News Image File Input reader processor
+        // Image & Logo Uploaders
         imageUpload.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     cardNewsImg.src = event.target.result;
-                    // Reset adjustment settings to defaults on fresh image drop
-                    zoomSlider.value = 1;
-                    panXSlider.value = 0;
-                    panYSlider.value = 0;
+                    zoomSlider.value = 1; panXSlider.value = 0; panYSlider.value = 0;
                     applyImageTransformations();
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        // Optional Channel Logo Custom File Input reader processor
         logoUpload.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -376,9 +359,8 @@
             }
         });
 
-        // High Quality Image Export & Downloader core click handler using html2canvas
+        // FIXED: High Quality Image Export Downloader
         downloadBtn.addEventListener('click', function() {
-            // Give button visual feedback state
             const fallbackText = downloadBtn.innerHTML;
             downloadBtn.disabled = true;
             downloadBtn.innerHTML = `
@@ -389,27 +371,27 @@
                 এইচডি কার্ড তৈরি হচ্ছে...
             `;
 
-            // Run html2canvas rendering sequence configurations directly over target div element
             html2canvas(cardTemplate, {
                 useCORS: true,
                 allowTaint: true,
-                scale: 1, // Enforces explicit crisp output target dimension mapping without screen scaling shifts
+                scale: 1, 
                 width: 1080,
                 height: 1080,
-                logging: false
+                logging: false,
+                onclone: function(clonedDoc) {
+                    clonedDoc.getElementById('card-template').style.transform = 'none';
+                }
             }).then(canvas => {
-                // Initialize high resolution image data download stream
                 const link = document.createElement('a');
                 link.download = `MCSF_News_${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
                 
-                // Restores action buttons functionality state
                 downloadBtn.disabled = false;
                 downloadBtn.innerHTML = fallbackText;
             }).catch(err => {
                 console.error("Rendering Card failed:", err);
-                alert("দুঃখিত, কার্ডটি ছবি হিসেবে তৈরি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+                alert("দুঃখিত, কার্ডটি ছবি হিসেবে তৈরি করতে সমস্যা হয়েছে।");
                 downloadBtn.disabled = false;
                 downloadBtn.innerHTML = fallbackText;
             });
