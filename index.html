@@ -23,11 +23,10 @@
         .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #10b981; }
         
-        /* Preview Wrapper (Square Box) */
+        /* === MOBILE FIX: CSS Square Hack === */
         #preview-wrapper {
             width: 100%;
             max-width: 500px;
-            aspect-ratio: 1 / 1;
             position: relative;
             overflow: hidden;
             border: 1px solid #10b981;
@@ -35,8 +34,14 @@
             background: #020617;
             box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
         }
+        /* এটি বক্সটিকে সবসময় নিখুঁত স্কয়ার (১:১) রাখবে যেকোনো স্ক্রিনে */
+        #preview-wrapper::before {
+            content: "";
+            display: block;
+            padding-top: 100%; 
+        }
 
-        /* Card Template (Fixed Size, Absolute Position for mobile scaling fix) */
+        /* Card Template */
         #card-template {
             width: 1080px;
             height: 1080px;
@@ -199,24 +204,26 @@
     </main>
 
     <script>
-        // PERFECT SCALING SCRIPT FOR MOBILE & DESKTOP
-        function updatePreviewScale() {
+        // === MOBILE FIX: BULLETPROOF SCALING AUTO-LOOP ===
+        function forceApplyScale() {
             const wrapper = document.getElementById('preview-wrapper');
             const template = document.getElementById('card-template');
+            
             if(wrapper && template) {
-                const wrapperWidth = wrapper.getBoundingClientRect().width;
-                const scale = wrapperWidth / 1080;
-                template.style.transform = `scale(${scale})`;
+                // Get the actual real-time width of the wrapper box
+                const wrapperWidth = wrapper.clientWidth; 
+                
+                if (wrapperWidth > 0) {
+                    const scaleValue = wrapperWidth / 1080;
+                    template.style.transform = `scale(${scaleValue})`;
+                }
             }
         }
         
-        // Listen to both resize and load to fix mobile cut-off
-        window.addEventListener('resize', updatePreviewScale);
-        window.addEventListener('load', updatePreviewScale);
-        
-        // Fallback timeout to ensure wrapper width is calculated
-        setTimeout(updatePreviewScale, 100);
-        setTimeout(updatePreviewScale, 500);
+        // এটি প্রতি ৫০০ মিলি-সেকেন্ড পরপর চেক করে জোর করে সাইজ ঠিক করে দেবে (মোবাইলের জন্য সেরা ট্রিক)
+        setInterval(forceApplyScale, 500);
+        window.addEventListener('resize', forceApplyScale);
+        window.addEventListener('load', forceApplyScale);
 
         // Date System
         function setBengaliDate() {
@@ -227,7 +234,7 @@
         }
         setBengaliDate();
 
-        // Text & Highlight Input Listeners
+        // Inputs Live Sync
         const headlineInput = document.getElementById('headline-input');
         headlineInput.addEventListener('input', () => {
             const formatted = headlineInput.value.replace(/\*(.*?)\*/g, '<span class="smart-highlight">$1</span>');
@@ -267,11 +274,11 @@
             }
         });
 
-        // Download Action
+        // Download Action (HD Quality)
         document.getElementById('download-btn').addEventListener('click', async function() {
             const btn = this;
             const originalText = btn.innerHTML;
-            btn.innerHTML = 'প্রসেসিং...';
+            btn.innerHTML = 'প্রসেসিং হচ্ছে...';
             btn.disabled = true;
             await document.fonts.ready;
 
@@ -283,9 +290,9 @@
                 height: 1080, 
                 backgroundColor: "#000000",
                 onclone: function(doc) {
+                    // এটি ডাউনলোড করার সময় কার্ডকে অরিজিনাল সাইজে করে ছবি তুলবে
                     const clonedCard = doc.getElementById('card-template');
-                    clonedCard.style.transform = 'none';
-                    clonedCard.style.position = 'relative'; 
+                    clonedCard.style.transform = 'scale(1)';
                 }
             }).then(canvas => {
                 const link = document.createElement('a');
