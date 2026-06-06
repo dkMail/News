@@ -4,39 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MCSF News Post-Card Generator</title>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for Bengali -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Fonts: Hind Siliguri (Professional Bengali Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- html2canvas Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- QR Code Generator Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
     <style>
         body {
-            font-family: 'Noto Sans Bengali', sans-serif;
+            font-family: 'Hind Siliguri', sans-serif; /* Applied new professional font */
             background-color: #0f172a;
             color: #f8fafc;
         }
-        /* Custom scrollbar for control panel */
-        .custom-scroll::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scroll::-webkit-scrollbar-track {
-            background: #1e293b;
-        }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 3px;
-        }
-        /* Fixed size Facebook post element for exact capture */
+        
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #1e293b; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        
         #card-template {
             width: 1080px;
             height: 1080px;
             position: relative;
             overflow: hidden;
-            background-color: #0b0f17;
+            background-color: #020617;
             user-select: none;
         }
-        /* Responsive preview wrapper container */
+        
         #preview-wrapper {
             width: 100%;
             max-width: 500px;
@@ -46,27 +46,47 @@
             border: 2px solid #334155;
             border-radius: 8px;
             background: #020617;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Cyber Grid Dot Pattern Overlay */
+        .cyber-grid {
+            background-image: radial-gradient(rgba(16, 185, 129, 0.25) 2px, transparent 2px);
+            background-size: 30px 30px;
+            pointer-events: none;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Highlight Text Animation inside Headline */
+        .smart-highlight {
+            color: #34d399; /* Emerald 400 */
+            text-shadow: 0 0 15px rgba(52, 211, 153, 0.4);
+            font-weight: 700;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
     <!-- Header -->
-    <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 shadow-lg">
+    <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 shadow-lg z-10">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
                 <div class="bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/30">
                     <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-wide text-white">MCSF News Post-Card Generator</h1>
-                    <p class="text-xs text-slate-400">Professional Facebook Post Size (1080x1080)</p>
+                    <h1 class="text-xl font-bold tracking-wide text-white">MCSF News Generator (Pro)</h1>
+                    <p class="text-xs text-slate-400">Glassmorphism & Cyber Fonts Integrated</p>
                 </div>
-            </div>
-            <div class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-md border border-slate-700">
-                Status: <span class="text-emerald-400 font-semibold">Live & Fully Working</span>
             </div>
         </div>
     </header>
@@ -74,302 +94,278 @@
     <!-- Main Dashboard -->
     <main class="max-w-7xl mx-auto w-full p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
         
-        <!-- Left Side: Controls Form (5 columns) -->
-        <section class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl flex flex-col gap-5 h-[calc(100vh-160px)] lg:min-h-[680px] overflow-y-auto custom-scroll">
-            <div class="border-b border-slate-800 pb-3">
-                <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
-                    <span>⚙️</span> কাস্টমাইজেশন প্যানেল
-                </h2>
-                <p class="text-xs text-slate-400 mt-1">সব তথ্য এখানে পরিবর্তন করুন, ডানে লাইভ আপডেট দেখুন</p>
-            </div>
-
-            <!-- News Image Upload & Adjustment -->
+        <!-- Left Side: Controls Form -->
+        <section class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl flex flex-col gap-5 h-[calc(100vh-140px)] lg:min-h-[680px] overflow-y-auto custom-scroll">
+            
+            <!-- Image & Pan Controls -->
             <div class="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-3">
-                <label class="block text-sm font-semibold text-slate-300">১. খবরের মূল ছবি আপলোড করুন</label>
-                <input type="file" id="image-upload" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer">
+                <label class="block text-sm font-semibold text-slate-300">১. খবরের মূল ছবি</label>
+                <input type="file" id="image-upload" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-emerald-600 file:text-white cursor-pointer">
                 
-                <!-- Zoom & Position Controllers -->
                 <div class="pt-2 space-y-2 border-t border-slate-800/60">
                     <div class="flex justify-between text-xs text-slate-400">
-                        <label for="zoom-slider">🔍 ছবি জুম ইন / আউট (Zoom):</label>
-                        <span id="zoom-val">1.0x</span>
+                        <label>🔍 জুম (Zoom):</label><span id="zoom-val">1.0x</span>
                     </div>
-                    <input type="range" id="zoom-slider" min="1" max="3" step="0.05" value="1" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                    <input type="range" id="zoom-slider" min="1" max="3" step="0.05" value="1" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
                     
-                    <div class="flex justify-between text-xs text-slate-400 pt-1">
-                        <label for="pan-x-slider">↔️ ডানে / বামে সরান (X Position):</label>
-                        <span id="pan-x-val">0px</span>
+                    <div class="flex justify-between text-xs text-slate-400">
+                        <label>↔️ ডানে/বামে:</label><span id="pan-x-val">0px</span>
                     </div>
-                    <input type="range" id="pan-x-slider" min="-400" max="400" step="1" value="0" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                    <input type="range" id="pan-x-slider" min="-500" max="500" step="1" value="0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
 
-                    <div class="flex justify-between text-xs text-slate-400 pt-1">
-                        <label for="pan-y-slider">↕️ ওপরে / নিচে সরান (Y Position):</label>
-                        <span id="pan-y-val">0px</span>
+                    <div class="flex justify-between text-xs text-slate-400">
+                        <label>↕️ ওপরে/নিচে:</label><span id="pan-y-val">0px</span>
                     </div>
-                    <input type="range" id="pan-y-slider" min="-400" max="400" step="1" value="0" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                    <input type="range" id="pan-y-slider" min="-500" max="500" step="1" value="0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
                 </div>
             </div>
 
-            <!-- Badge / Category Type -->
+            <!-- Badge & Color -->
             <div class="space-y-1.5">
-                <label class="block text-sm font-semibold text-slate-300">২. নিউজ ক্যাটাগরি / ব্যাজ</label>
+                <label class="block text-sm font-semibold text-slate-300">২. নিউজ ক্যাটাগরি</label>
                 <div class="grid grid-cols-2 gap-2">
-                    <input type="text" id="badge-input" value="ব্রেকিং নিউজ" class="bg-slate-950 border border-slate-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 text-white">
-                    <select id="badge-color" class="bg-slate-950 border border-slate-800 rounded-md px-2 py-2 text-sm focus:outline-none focus:border-emerald-500 text-white">
-                        <option value="bg-red-600">লাল থিম (Breaking)</option>
-                        <option value="bg-emerald-600">সবুজ থিম (Cyber)</option>
-                        <option value="bg-amber-500 text-slate-950">হলুদ থিম (Warning)</option>
-                        <option value="bg-blue-600">নীল থিম (Update)</option>
+                    <input type="text" id="badge-input" value="সাইবার অ্যালার্ট" class="bg-slate-950 border border-slate-800 rounded px-3 py-2 text-sm text-white focus:border-emerald-500 outline-none">
+                    <select id="badge-color" class="bg-slate-950 border border-slate-800 rounded px-2 py-2 text-sm text-white focus:border-emerald-500 outline-none">
+                        <option value="bg-emerald-600">সবুজ (Cyber)</option>
+                        <option value="bg-red-600">লাল (Breaking)</option>
+                        <option value="bg-blue-600">নীল (Info)</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Headline Input -->
+            <!-- Smart Headline Input -->
             <div class="space-y-1.5">
-                <label for="headline-input" class="block text-sm font-semibold text-slate-300">৩. খবরের মূল হেডলাইন (Headline)</label>
-                <textarea id="headline-input" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 text-white resize-none" placeholder="এখানে প্রধান শিরোনামটি লিখুন...">মাটূয়াইল সাইবার সিকিউরিটি ফোর্সের নতুন ওয়েব অ্যাপ্লিকেশন চালু!</textarea>
+                <div class="flex justify-between items-end">
+                    <label class="block text-sm font-semibold text-slate-300">৩. হেডলাইন (Smart Highlight)</label>
+                    <span class="text-[10px] text-emerald-400">টিপস: শব্দের দুইপাশে * দিন (যেমন: *সাইবার*)</span>
+                </div>
+                <textarea id="headline-input" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-sm text-white focus:border-emerald-500 outline-none resize-none">মাটূয়াইল *সাইবার সিকিউরিটি ফোর্সের* নতুন ওয়েব অ্যাপ্লিকেশন চালু!</textarea>
             </div>
 
-            <!-- Details/Subtext Input -->
+            <!-- Details Input -->
             <div class="space-y-1.5">
-                <label for="details-input" class="block text-sm font-semibold text-slate-300">৪. বিস্তারিত বিবরণ (Subtext / Details)</label>
-                <textarea id="details-input" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 text-white resize-none" placeholder="খবরের সংক্ষিপ্ত বিবরণ এখানে লিখুন...">সোশ্যাল মিডিয়া টিমগুলোর কাজ সহজ করতে এবং প্রফেশনাল নিউজ ফটোকার্ড তৈরি করতে এই স্বয়ংক্রিয় প্যানেলটি ডিজাইন করা হয়েছে।</textarea>
+                <label class="block text-sm font-semibold text-slate-300">৪. বিস্তারিত বিবরণ</label>
+                <textarea id="details-input" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-sm text-white focus:border-emerald-500 outline-none resize-none">সোশ্যাল মিডিয়া টিমগুলোর কাজ সহজ করতে এবং প্রফেশনাল নিউজ ফটোকার্ড তৈরি করতে এই স্বয়ংক্রিয় গ্লাসমরফিজম প্যানেলটি ডিজাইন করা হয়েছে।</textarea>
             </div>
 
-            <!-- Reporter Name Input -->
-            <div class="space-y-1.5">
-                <label for="reporter-input" class="block text-sm font-semibold text-slate-300">৫. প্রতিবেদকের নাম / উৎস (Reporter Name)</label>
-                <input type="text" id="reporter-input" value="নিজস্ব প্রতিবেদক" class="w-full bg-slate-950 border border-slate-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 text-white">
-            </div>
-
-            <!-- Date Input -->
-            <div class="space-y-1.5">
-                <label for="date-input" class="block text-sm font-semibold text-slate-300">৬. তারিখ এবং সময় (Date & Time)</label>
-                <input type="text" id="date-input" class="w-full bg-slate-950 border border-slate-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 text-white">
-            </div>
-
-            <!-- Optional: Custom Logo File Upload -->
-            <div class="space-y-1.5 pt-2 border-t border-slate-800">
-                <label class="block text-xs text-slate-400">লোগো পরিবর্তন করতে চান? (ঐচ্ছিক)</label>
-                <input type="file" id="logo-upload" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-slate-800 file:text-slate-300 cursor-pointer">
-                <p class="text-[10px] text-slate-500">আপলোড না করলে আপনার দেওয়া ডিফল্ট "32390.png" ফাইলটিই দেখাবে।</p>
-            </div>
-        </section>
-
-        <!-- Right Side: Live Preview Area (7 columns) -->
-        <section class="lg:col-span-7 flex flex-col items-center justify-center bg-slate-950 border border-slate-800 rounded-xl p-6 shadow-xl gap-4">
-            <div class="w-full flex justify-between items-center px-2">
-                <h3 class="text-sm font-semibold text-slate-400 flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> লাইভ প্রিভিউ (ফেসবুক পোস্ট সাইজ)
-                </h3>
-                <span class="text-xs text-slate-500">1080 x 1080 px (1:1 Ratio)</span>
-            </div>
-
-            <!-- Preview Scaled Wrapper Container -->
-            <div id="preview-wrapper">
-                <!-- Inside this is the actual 1080x1080 div, which we will dynamically scale via JS to fit perfectly -->
-                <div id="card-template">
-                    
-                    <!-- Main Background News Image -->
-                    <div class="absolute inset-0 w-full h-full z-1 overflow-hidden">
-                        <img id="card-news-img" src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1080&auto=format&fit=crop" alt="News Image" class="w-full h-full object-cover transition-none">
-                    </div>
-
-                    <!-- Bottom Smart Gradient Overlay (Deep dark cinematic look) -->
-                    <div class="absolute bottom-0 left-0 w-full h-[65%] z-10" style="background: linear-gradient(to top, rgba(6, 9, 15, 1) 0%, rgba(6, 9, 15, 0.95) 45%, rgba(6, 9, 15, 0.6) 70%, rgba(6, 9, 15, 0) 100%);"></div>
-                    
-                    <!-- Top subtle overlay gradient to maintain logo visibility -->
-                    <div class="absolute top-0 left-0 w-full h-[25%] z-10" style="background: linear-gradient(to bottom, rgba(6, 9, 15, 0.6) 0%, rgba(6, 9, 15, 0) 100%);"></div>
-
-                    <!-- Top-Left Side Badge Box -->
-                    <div class="absolute top-10 left-10 z-20">
-                        <div id="card-badge" class="bg-red-600 text-white font-bold text-2xl px-5 py-2.5 rounded shadow-lg uppercase tracking-wider border border-white/10">
-                            ব্রেকিং নিউজ
-                        </div>
-                    </div>
-
-                    <!-- Top-Right Side Channel Logo (User's Logo) -->
-                    <div class="absolute top-9 right-10 z-20">
-                        <img id="card-logo" src="32390.png" alt="Logo" onerror="this.src='https://placehold.co/150x150/0f172a/ffffff?text=MCSF+LOGO'" class="w-32 h-32 object-contain filter drop-shadow([0_5px_15px_rgba(0,0,0,0.6)])">
-                    </div>
-
-                    <!-- Main Text Contents Container -->
-                    <div class="absolute bottom-0 left-0 w-full p-12 z-20 flex flex-col justify-end">
-                        
-                        <!-- Headline with cyber green border accent -->
-                        <h2 id="card-headline" class="text-[48px] font-bold text-white leading-[1.35] tracking-wide mb-6 pl-5 border-l-[8px] border-emerald-500 drop-shadow-sm">
-                            মাটূয়াইল সাইবার সিকিউরিটি ফোর্সের নতুন ওয়েব অ্যাপ্লিকেশন চালু!
-                        </h2>
-                        
-                        <!-- News Short Details text description -->
-                        <p id="card-details" class="text-[25px] text-slate-300 font-normal leading-[1.6] mb-8 drop-shadow-sm max-h-[120px] overflow-hidden opacity-95">
-                            সোশ্যাল মিডিয়া টিমগুলোর কাজ সহজ করতে এবং প্রফেশনাল নিউজ ফটোকার্ড তৈরি করতে এই স্বয়ংক্রিয় প্যানেলটি ডিজাইন করা হয়েছে।
-                        </p>
-
-                        <!-- Bottom Footer Row Bar (Divider line & details) -->
-                        <div class="border-t-2 border-slate-700/50 pt-5 flex justify-between items-center text-slate-400 font-semibold text-[21px]">
-                            <!-- Left: Reporter Name -->
-                            <div class="flex items-center gap-2">
-                                <span class="text-emerald-400">●</span>
-                                <span id="card-reporter">নিজস্ব প্রতিবেদক</span>
-                            </div>
-                            <!-- Right: Custom Date Display -->
-                            <div id="card-date" class="bg-slate-900/60 border border-slate-800/80 px-4 py-1.5 rounded-md text-slate-300">
-                                ০৬ জুন, ২০২৬
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- High Tech Corner Accent Line -->
-                    <div class="absolute bottom-0 right-0 w-32 h-1.5 bg-emerald-500 z-30"></div>
-
+            <!-- Reporter & QR Code Source -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="block text-sm font-semibold text-slate-300">৫. প্রতিবেদকের নাম</label>
+                    <input type="text" id="reporter-input" value="MCSF ডেস্ক" class="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-sm text-white focus:border-emerald-500 outline-none">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-sm font-semibold text-slate-300">৬. QR Code লিংক</label>
+                    <select id="qr-selector" class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-2 text-sm text-white focus:border-emerald-500 outline-none">
+                        <option value="https://www.facebook.com/profile.php?id=61576825379963">Facebook Page</option>
+                        <option value="https://t.me/team_mcsf001">Telegram Group</option>
+                        <option value="https://whatsapp.com/channel/0029VbDJp5cBvvsXJwqLJG0N">WhatsApp Channel</option>
+                    </select>
                 </div>
             </div>
 
-            <!-- Action Button -->
-            <button id="download-btn" class="w-full max-w-[500px] bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold py-3.5 px-6 rounded-lg transition duration-200 flex items-center justify-center gap-2.5 shadow-lg shadow-emerald-950/40 text-md border border-emerald-500/20 active:scale-[0.99]">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                </svg>
-                এইচডি নিউজ কার্ড ডাউনলোড করুন (PNG)
-            </button>
+            <!-- Logo Upload -->
+            <div class="space-y-1.5 pt-2 border-t border-slate-800">
+                <label class="block text-xs text-slate-400">কাস্টম লোগো (ঐচ্ছিক)</label>
+                <input type="file" id="logo-upload" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-1 file:px-2 file:rounded file:border-0 file:bg-slate-800 file:text-slate-300 cursor-pointer">
+            </div>
         </section>
 
+        <!-- Right Side: Live Preview Area -->
+        <section class="lg:col-span-7 flex flex-col items-center justify-center bg-slate-950 border border-slate-800 rounded-xl p-6 shadow-xl gap-4">
+            
+            <div class="w-full flex justify-between items-center px-2">
+                <h3 class="text-sm font-semibold text-slate-400 flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> লাইভ প্রো-প্রিভিউ
+                </h3>
+                <span class="text-xs text-slate-500 border border-slate-700 px-2 py-0.5 rounded">1080 x 1080 px</span>
+            </div>
+
+            <!-- Preview Container -->
+            <div id="preview-wrapper">
+                <div id="card-template">
+                    
+                    <!-- 1. Main Background Image -->
+                    <div class="absolute inset-0 w-full h-full z-0 overflow-hidden bg-slate-900">
+                        <img id="card-news-img" src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1080&auto=format&fit=crop" class="w-full h-full object-cover transition-none">
+                    </div>
+
+                    <!-- 2. Cyber Grid Overlay -->
+                    <div class="absolute inset-0 w-full h-full z-10 cyber-grid"></div>
+
+                    <!-- 3. Top Gradient for Logo/Badge visibility -->
+                    <div class="absolute top-0 left-0 w-full h-[30%] z-10" style="background: linear-gradient(to bottom, rgba(2,6,23,0.8) 0%, rgba(2,6,23,0) 100%);"></div>
+
+                    <!-- 4. Top-Left Badge -->
+                    <div class="absolute top-10 left-10 z-20">
+                        <div id="card-badge" class="bg-emerald-600 text-white font-bold text-[28px] px-6 py-2.5 rounded shadow-[0_0_15px_rgba(16,185,129,0.5)] uppercase tracking-wide border border-white/20">
+                            সাইবার অ্যালার্ট
+                        </div>
+                    </div>
+
+                    <!-- 5. Top-Right Logo -->
+                    <div class="absolute top-8 right-10 z-20">
+                        <img id="card-logo" src="32390.png" onerror="this.src='https://placehold.co/150x150/0f172a/10b981?text=MCSF'" class="w-[140px] h-[140px] object-contain drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)]">
+                    </div>
+
+                    <!-- 6. Bottom Glassmorphism Panel for Text -->
+                    <div class="absolute bottom-0 left-0 w-full glass-panel z-20 px-12 pt-10 pb-10 flex flex-col">
+                        
+                        <!-- Headline (Supports Smart Highlight) -->
+                        <h2 id="card-headline" class="text-[52px] font-bold text-white leading-[1.3] mb-5 border-l-[8px] border-emerald-500 pl-6 drop-shadow-lg">
+                            মাটূয়াইল <span class="smart-highlight">সাইবার সিকিউরিটি ফোর্সের</span> নতুন ওয়েব অ্যাপ্লিকেশন চালু!
+                        </h2>
+                        
+                        <!-- Details text -->
+                        <p id="card-details" class="text-[26px] text-slate-200 font-medium leading-[1.6] mb-8 drop-shadow-md">
+                            সোশ্যাল মিডিয়া টিমগুলোর কাজ সহজ করতে এবং প্রফেশনাল নিউজ ফটোকার্ড তৈরি করতে এই স্বয়ংক্রিয় গ্লাসমরফিজম প্যানেলটি ডিজাইন করা হয়েছে।
+                        </p>
+
+                        <!-- Footer Row: Reporter, Date, QR Code & Authenticity Stamp -->
+                        <div class="border-t border-slate-600/50 pt-6 flex justify-between items-end">
+                            
+                            <!-- Left Side: Details -->
+                            <div class="flex flex-col gap-2">
+                                <div class="flex items-center gap-3 text-[22px] font-semibold text-emerald-400">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path></svg>
+                                    <span id="card-reporter" class="text-white">MCSF ডেস্ক</span>
+                                </div>
+                                <div id="card-date" class="text-[20px] text-slate-400 font-medium">
+                                    ০৬ জুন, ২০২৬
+                                </div>
+                            </div>
+
+                            <!-- Right Side: QR Code & Verify Stamp -->
+                            <div class="flex items-center gap-5">
+                                <div class="text-right flex flex-col items-end justify-center">
+                                    <span class="text-[14px] text-slate-400 font-bold tracking-[0.2em] uppercase mb-1">Authenticity ID</span>
+                                    <span class="text-[18px] text-emerald-400 font-bold bg-emerald-950/50 px-3 py-1 rounded border border-emerald-800/50">MCSF-VERIFIED-X9</span>
+                                </div>
+                                <!-- Canvas for QR -->
+                                <div class="bg-white p-2 rounded-lg shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                                    <canvas id="qr-canvas" width="80" height="80"></canvas>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Tech Accent Line -->
+                    <div class="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-600 via-teal-400 to-emerald-600 z-30"></div>
+                </div>
+            </div>
+
+            <!-- Download Button -->
+            <button id="download-btn" class="w-full max-w-[500px] bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-6 rounded-lg transition duration-200 flex items-center justify-center gap-2.5 shadow-lg shadow-emerald-900/50 text-md">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                এইচডি প্রফেশনাল কার্ড ডাউনলোড করুন
+            </button>
+        </section>
     </main>
 
-    <!-- Footer Disclaimer -->
-    <footer class="bg-slate-950 border-t border-slate-900 py-3 text-center text-xs text-slate-500">
-        <p>© 2026 Matuail Cyber Security Force (MCSF). All Rights Reserved.</p>
-    </footer>
-
-    <!-- Logic Engine Script -->
     <script>
-        // DOM Elements Selectors
-        const imageUpload = document.getElementById('image-upload');
-        const logoUpload = document.getElementById('logo-upload');
+        // DOM Elements
         const zoomSlider = document.getElementById('zoom-slider');
         const panXSlider = document.getElementById('pan-x-slider');
         const panYSlider = document.getElementById('pan-y-slider');
-        
-        const badgeInput = document.getElementById('badge-input');
-        const badgeColor = document.getElementById('badge-color');
         const headlineInput = document.getElementById('headline-input');
-        const detailsInput = document.getElementById('details-input');
-        const reporterInput = document.getElementById('reporter-input');
-        const dateInput = document.getElementById('date-input');
-        
-        const cardNewsImg = document.getElementById('card-news-img');
-        const cardLogo = document.getElementById('card-logo');
-        const cardBadge = document.getElementById('card-badge');
-        const cardHeadline = document.getElementById('card-headline');
-        const cardDetails = document.getElementById('card-details');
-        const cardReporter = document.getElementById('card-reporter');
-        const cardDate = document.getElementById('card-date');
-        
+        const badgeColor = document.getElementById('badge-color');
+        const qrSelector = document.getElementById('qr-selector');
         const cardTemplate = document.getElementById('card-template');
-        const previewWrapper = document.getElementById('preview-wrapper');
-        const downloadBtn = document.getElementById('download-btn');
 
-        // Dynamic Responsive Auto-Scaling
+        // Responsive Scaling
         function updatePreviewScale() {
-            const wrapperWidth = previewWrapper.clientWidth;
-            const targetSize = 1080;
-            const scaleFactor = wrapperWidth / targetSize;
-            
-            cardTemplate.style.transform = `scale(${scaleFactor})`;
+            const wrapper = document.getElementById('preview-wrapper');
+            const scale = wrapper.clientWidth / 1080;
+            cardTemplate.style.transform = `scale(${scale})`;
             cardTemplate.style.transformOrigin = 'top left';
         }
-
         window.addEventListener('resize', updatePreviewScale);
         setTimeout(updatePreviewScale, 100);
 
-        // Auto Setup System Current Date
+        // Date Setup
         function setBengaliDate() {
             const date = new Date();
             const months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
-            const convertToBengaliNum = (num) => {
-                const numStr = num.toString();
-                const conversion = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
-                return numStr.split('').map(digit => conversion[digit] || digit).join('');
-            };
-
-            const day = convertToBengaliNum(date.getDate().toString().padStart(2, '0'));
-            const month = months[date.getMonth()];
-            const year = convertToBengaliNum(date.getFullYear());
-            
-            const fullFormattedDate = `${day} ${month}, ${year}`;
-            dateInput.value = fullFormattedDate;
-            cardDate.innerText = fullFormattedDate;
+            const convertToBn = num => num.toString().split('').map(d => {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'}[d] || d).join('');
+            document.getElementById('card-date').innerText = `${convertToBn(date.getDate().toString().padStart(2, '0'))} ${months[date.getMonth()]}, ${convertToBn(date.getFullYear())}`;
         }
         setBengaliDate();
 
-        // Image Zooming and Panning Matrix Updater
-        function applyImageTransformations() {
-            const zoom = zoomSlider.value;
-            const x = panXSlider.value;
-            const y = panYSlider.value;
-            
-            cardNewsImg.style.transform = `scale(${zoom}) translate(${x}px, ${y}px)`;
-            document.getElementById('zoom-val').innerText = `${zoom}x`;
-            document.getElementById('pan-x-val').innerText = `${x}px`;
-            document.getElementById('pan-y-val').innerText = `${y}px`;
+        // Image Transforms
+        function applyTransforms() {
+            document.getElementById('card-news-img').style.transform = `scale(${zoomSlider.value}) translate(${panXSlider.value}px, ${panYSlider.value}px)`;
+            document.getElementById('zoom-val').innerText = `${zoomSlider.value}x`;
+            document.getElementById('pan-x-val').innerText = `${panXSlider.value}px`;
+            document.getElementById('pan-y-val').innerText = `${panYSlider.value}px`;
         }
+        [zoomSlider, panXSlider, panYSlider].forEach(el => el.addEventListener('input', applyTransforms));
 
-        zoomSlider.addEventListener('input', applyImageTransformations);
-        panXSlider.addEventListener('input', applyImageTransformations);
-        panYSlider.addEventListener('input', applyImageTransformations);
+        // Smart Highlight Engine
+        function parseHeadline() {
+            const raw = headlineInput.value;
+            // Replaces text inside *asterisks* with a special styling span
+            const formatted = raw.replace(/\*(.*?)\*/g, '<span class="smart-highlight">$1</span>');
+            document.getElementById('card-headline').innerHTML = formatted;
+        }
+        headlineInput.addEventListener('input', parseHeadline);
 
-        // Core Event Input updates
-        badgeInput.addEventListener('input', () => cardBadge.innerText = badgeInput.value);
-        headlineInput.addEventListener('input', () => cardHeadline.innerText = headlineInput.value);
-        detailsInput.addEventListener('input', () => cardDetails.innerText = detailsInput.value);
-        reporterInput.addEventListener('input', () => cardReporter.innerText = reporterInput.value);
-        dateInput.addEventListener('input', () => cardDate.innerText = dateInput.value);
+        // Standard Text Sync
+        document.getElementById('badge-input').addEventListener('input', e => document.getElementById('card-badge').innerText = e.target.value);
+        document.getElementById('details-input').addEventListener('input', e => document.getElementById('card-details').innerText = e.target.value);
+        document.getElementById('reporter-input').addEventListener('input', e => document.getElementById('card-reporter').innerText = e.target.value);
 
-        // Badge color dropdown changer
+        // Badge Color Changer
         badgeColor.addEventListener('change', () => {
-            cardBadge.className = "text-white font-bold text-2xl px-5 py-2.5 rounded shadow-lg uppercase tracking-wider border border-white/10";
-            const currentSelectedColorClasses = badgeColor.value.split(' ');
-            currentSelectedColorClasses.forEach(cls => cardBadge.classList.add(cls));
+            const badge = document.getElementById('card-badge');
+            badge.className = "text-white font-bold text-[28px] px-6 py-2.5 rounded shadow-[0_0_15px_rgba(16,185,129,0.5)] uppercase tracking-wide border border-white/20";
+            badge.classList.add(badgeColor.value);
         });
 
-        // Image & Logo Uploaders
-        imageUpload.addEventListener('change', function(e) {
+        // QR Code Generator initialization
+        let qr = new QRious({
+            element: document.getElementById('qr-canvas'),
+            value: qrSelector.value,
+            size: 100,
+            background: 'white',
+            foreground: '#064e3b' // Dark emerald
+        });
+
+        qrSelector.addEventListener('change', (e) => {
+            qr.value = e.target.value;
+        });
+
+        // Image Uploaders
+        document.getElementById('image-upload').addEventListener('change', e => {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
-                    cardNewsImg.src = event.target.result;
-                    zoomSlider.value = 1; panXSlider.value = 0; panYSlider.value = 0;
-                    applyImageTransformations();
+                reader.onload = ev => {
+                    document.getElementById('card-news-img').src = ev.target.result;
+                    zoomSlider.value = 1; panXSlider.value = 0; panYSlider.value = 0; applyTransforms();
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        logoUpload.addEventListener('change', function(e) {
+        document.getElementById('logo-upload').addEventListener('change', e => {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
-                    cardLogo.src = event.target.result;
-                };
+                reader.onload = ev => document.getElementById('card-logo').src = ev.target.result;
                 reader.readAsDataURL(file);
             }
         });
 
-        // FIXED: High Quality Image Export Downloader
-        downloadBtn.addEventListener('click', function() {
-            const fallbackText = downloadBtn.innerHTML;
-            downloadBtn.disabled = true;
-            downloadBtn.innerHTML = `
-                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                এইচডি কার্ড তৈরি হচ্ছে...
-            `;
+        // High Quality Download Sequence
+        document.getElementById('download-btn').addEventListener('click', async function() {
+            const btn = this;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'প্রসেসিং হচ্ছে...';
+            btn.disabled = true;
+
+            // Wait for custom fonts to load properly before capturing
+            await document.fonts.ready;
 
             html2canvas(cardTemplate, {
                 useCORS: true,
@@ -377,25 +373,24 @@
                 scale: 1, 
                 width: 1080,
                 height: 1080,
+                backgroundColor: "#020617",
                 logging: false,
-                onclone: function(clonedDoc) {
-                    clonedDoc.getElementById('card-template').style.transform = 'none';
+                onclone: function(doc) {
+                    doc.getElementById('card-template').style.transform = 'none';
                 }
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `MCSF_News_${Date.now()}.png`;
-                link.href = canvas.toDataURL('image/png');
+                link.download = `MCSF_Pro_News_${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
-                
-                downloadBtn.disabled = false;
-                downloadBtn.innerHTML = fallbackText;
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }).catch(err => {
-                console.error("Rendering Card failed:", err);
-                alert("দুঃখিত, কার্ডটি ছবি হিসেবে তৈরি করতে সমস্যা হয়েছে।");
-                downloadBtn.disabled = false;
-                downloadBtn.innerHTML = fallbackText;
+                alert("ডাউনলোড করতে সমস্যা হয়েছে। পেজ রিলোড দিয়ে আবার চেষ্টা করুন।");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             });
         });
     </script>
 </body>
-</html>
+    </html>
